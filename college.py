@@ -1,4 +1,4 @@
-import utils 
+import rawlsnet 
 import numpy as np
 
 talent_cpd = np.array([[0.5, 0.5]]).T
@@ -36,8 +36,9 @@ data =\
 	'hashed_file': "college",\
 	'file_path': "",\
 	'out_path': "figs",\
-	'manual_constraints': {'A': [[0, 0, 1, 0], [0, 0, 0, 1]], 'B': [0.1, 0.85]}
+	'manual_constraints': {'A': [[0, 0, 1, 0], [0, 0, 0, 1]], 'B': [0.1, 0.85]},
+	"constraint_val": 0.5
 }
 
 if __name__ == "__main__": 
-	utils.perturb_bayes(data)
+	rawlsnet.perturb_bayes(data)

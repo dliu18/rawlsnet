@@ -6,9 +6,9 @@ Presented at AIES'21
 [Full Paper](https://arxiv.org/abs/2104.03909)
 
 # Reproducibility Instructions
-The core implementation of RAWLSNET is included in the `utils.py` file. The parent method in this file is `perturb_bayes` which then calls all of the necessary helper functions. 
+The core implementation of RAWLSNET is included in the `rawlsnet.py` file. The parent method in this file is `perturb_bayes` which then calls all of the necessary helper functions. 
 
-The experiments in the paper can be reproduced by calling the corresponding main file. Principally, the file `college.py` reproduces Figure 2 from the paper. Future examples and experiments can be created by writing a new main function and calling `perturb_bayes` accordingly. Users may find the comment header for `pertub_bayes` helpful. For convenience the documentation is also included below: 
+The file `college.py` reproduces Figure 2 from the paper -- the core example from the paper. Future examples and experiments can be created by writing a new main function and calling `perturb_bayes` accordingly. Users may find the comment header for `pertub_bayes` helpful. For convenience the documentation is also included below: 
 
 ```python
 def perturb_bayes(data):
@@ -54,6 +54,8 @@ def perturb_bayes(data):
 ```
 
 After executing the main function, all figures are exported into the `/figs` directory.
+
+All of the python dependencies are specified in `requirements.txt`.
 
 # Implementation Notes
 The implementation of RAWLSNET released here allows for categorical query variables (e.g. job) but all other variables must be binary. From a methodological perspective, categorical variables are not an issue; it simply requires additional implementation. To support categorical variables, the `generate_binary_truth` table function in `utils.py` should be replaced by a helper function that generates all permutations of the provided variables. 
