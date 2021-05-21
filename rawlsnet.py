@@ -222,7 +222,7 @@ def perturb_bayes(data):
 			}
 
 
-			updated_cpd, objective = optimize_control_cpd(model, user_input, cardinalities, B_feasibility = constraint_val)
+			updated_cpd, objective = optimize_control_cpd(model, user_input, cardinalities)
 			feasibility_cpd, _ = optimize_control_cpd(model, user_input, cardinalities, B_feasibility = constraint_val)
 
 			
