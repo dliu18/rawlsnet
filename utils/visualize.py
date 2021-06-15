@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+import pandas as pd
 
 import utils.util
 import utils.bn
@@ -35,7 +36,8 @@ def get_feo_plot(model, inference, important_nodes, query_node, control_val, car
         for ev in evidence_list:
             plot[node][utils.util.dict_to_string(ev)] = inference.query([node], evidence = ev, joint = False)[node].values[1]
             
-            
+    results_df = []
+
     fig = go.Figure()
     keys = list(plot[heirarchy[0]].keys())
 
@@ -46,10 +48,16 @@ def get_feo_plot(model, inference, important_nodes, query_node, control_val, car
             value_list.append(plot[heirarchy[i]][keys[k]])
 
         fig.add_trace(go.Scatter(x = ['Start'] + heirarchy, y = [0.0] + value_list, name = keys[k]))
+        results_df.append(["P(" + str(heirarchy[-1]) + " | " + str(keys[k]).replace('|', ',') + ")", value_list[-1]])
 
 
     fig.update_layout(title = "Probabilities Per Stage - " + title, 
                       xaxis_title = 'Stages', 
                       yaxis_title = 'Probabilities')
+
+    results_df = pd.DataFrame(results_df)
+    results_df.columns = ['Conditions', title + " Probabilities"]
     
     fig.write_html(hashed_file + ".html")
+
+    return results_df

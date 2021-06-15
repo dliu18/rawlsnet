@@ -1,5 +1,10 @@
 from pgmpy.models import BayesianModel
-from pgmpy.factors.discrete import TabularCPD
+from pgmpy.factors.discrete import TabularCPD, DiscreteFactor
+from pgmpy.inference import VariableElimination
+from pgmpy.sampling import BayesianModelSampling
+from pgmpy.estimators import MaximumLikelihoodEstimator, K2Score
+from pgmpy.estimators import BayesianEstimator, ExhaustiveSearch, PC
+
 import numpy as np
 import networkx as nx
 

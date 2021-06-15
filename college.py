@@ -34,7 +34,7 @@ data =\
 					{"variable": "Job", "variable_card": "2", "evidence": ["SES", "College"], "evidence_card": [2,2], "values": job_cpd}\
 				   ],\
 	'hashed_file': "college",\
-	'file_path': "",\
+	'file_path': None,\
 	'out_path': "figs",\
 	'manual_constraints': {'A': [[0, 0, 1, 0], [0, 0, 0, 1]], 'B': [0.1, 0.85]},
 	"constraint_val": 0.5

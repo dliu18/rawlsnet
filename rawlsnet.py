@@ -1,9 +1,12 @@
 from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
+from pgmpy.estimators import MaximumLikelihoodEstimator, K2Score
+
 import cvxpy as cp
 
 import copy
+import traceback
 
 import numpy as np
 import pandas as pd
@@ -11,6 +14,8 @@ import pandas as pd
 import utils.bn
 import utils.visualize
 import utils.util
+
+
 
 ############################## Main Functions ##############################
 
@@ -91,14 +96,15 @@ def perturb_bayes(data):
 
 		cardinalities = {}
 
-		# try: 
-		# 	csv_file_name = file_path #'./user_data/' + hashed_file + ".csv" 
-		# 	working_data = pd.read_csv(csv_file_name)
-		
-		# except Exception as e: 
-		# 	print ("Error | Could Not Read CSV File | ", e)
-		# 	traceback.print_exc();
-		# 	return {"error_exists" : True}
+		if file_path != "" and type(file_path) != type(None):
+			try: 
+				csv_file_name = file_path
+				working_data = pd.read_csv(csv_file_name)
+			
+			except Exception as e: 
+				print ("Error | Could Not Read CSV File | ", e)
+				traceback.print_exc();
+				return {"error_exists" : True}
 
 		# Bayes Net Exists 
 		if bayes_net_exists == "yes":
@@ -245,14 +251,14 @@ def perturb_bayes(data):
 
 			# Get old inference object 
 			inference_old = VariableElimination(model)
-			utils.visualize.get_feo_plot(model = model, 
-						 inference = inference_old,
-						 important_nodes = node_list, 
-						 query_node = adv_soc_pos_val,
-						 control_val = control_val,
-						 cardinalities = cardinalities,
-						 hashed_file = hashed_file + "_old",
-						 title = 'Existing')
+			prob_table_existing = utils.visualize.get_feo_plot(model = model, 
+															   inference = inference_old,
+															   important_nodes = node_list, 
+															   query_node = adv_soc_pos_val,
+															   control_val = control_val,
+															   cardinalities = cardinalities,
+															   hashed_file = hashed_file + "_old",
+															   title = 'Existing')
 
 			# Update CPT 
 			utils.bn.update_cpd(model = model,
@@ -261,14 +267,14 @@ def perturb_bayes(data):
 
 			# Get new inference object
 			inference_new = VariableElimination(model)
-			utils.visualize.get_feo_plot(model = model, 
-						 inference = inference_new,
-						 important_nodes = node_list,
-						 query_node = adv_soc_pos_val, 
-						 control_val = control_val,
-						 cardinalities = cardinalities,
-						 hashed_file = hashed_file + "_optimized", 
-						 title = 'Updated')
+			prob_table_updated = utils.visualize.get_feo_plot(model = model, 
+															  inference = inference_new,
+															  important_nodes = node_list,
+															  query_node = adv_soc_pos_val, 
+															  control_val = control_val,
+															  cardinalities = cardinalities,
+															  hashed_file = hashed_file + "_optimized", 
+															  title = 'Updated')
 
 
 			# Update CPT 
@@ -278,14 +284,14 @@ def perturb_bayes(data):
 
 			# Get new inference object
 			inference_new = VariableElimination(model)
-			utils.visualize.get_feo_plot(model = model, 
-						 inference = inference_new,
-						 important_nodes = node_list,
-						 query_node = adv_soc_pos_val, 
-						 control_val = control_val,
-						 cardinalities = cardinalities,
-						 hashed_file = hashed_file + "_feasibility", 
-						 title = 'Updated with Feasibility Constraints')
+			prob_table_feas = utils.visualize.get_feo_plot(model = model, 
+														   inference = inference_new,
+														   important_nodes = node_list,
+														   query_node = adv_soc_pos_val, 
+														   control_val = control_val,
+														   cardinalities = cardinalities,
+														   hashed_file = hashed_file + "_feasibility", 
+														   title = 'Updated with Feasibility Constraints')
 			new_cpd = model.get_cpds(control_val).values.ravel()
 
 			parents = utils.bn.get_parents(model, control_val)
@@ -296,7 +302,21 @@ def perturb_bayes(data):
 			truth_table['Existing Values'] = old_cpd
 			truth_table['FEO Compliant Values'] = new_cpd
 
+			print ("===============================================================")
+			print ("=========================== Results ===========================")
+			print ("===============================================================")
+
+			print ()
+			print ("===================== Updated Truth Table =====================")
 			print (truth_table)
+			
+			print ()
+			print ("======================== Probabilities ======================== ")
+			print (prob_table_existing)
+			print ()
+			print (prob_table_updated)
+			print ()
+			print (prob_table_feas)
 
 
 
